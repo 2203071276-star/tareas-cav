@@ -1,0 +1,66 @@
+{
+  "partesDelCuerpo": [
+    "brazo",
+    "pierna",
+    "cabeza",
+    "torso"
+  ],
+  "accionesDeMovimiento": [
+    "levantar",
+    "mover",
+    "girar",
+    "extender"
+  ],
+  "ladosDelCuerpo": [
+    "derecho",
+    "izquierdo"
+  ]
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Instrucciones</title>
+</head>
+<body>
+    <h1>Generador de Instrucciones de Movimiento</h1>
+    <p>El archivo json dice que: <span id="instruccion-movimiento"></span></p>
+
+    <script>
+        // Funcion para obtener un elemento aleatorio de un array
+        function obtenerElementoAleatorio(array) {
+            const indice = Math.floor(Math.random() * array.length);
+            return array[indice];
+        }
+
+        // Usar fetch() para cargar el archivo JSON
+        fetch('instrucciones.json')
+            .then(response => {
+                // La primera promesa para verificar que la respuesta sea correcta
+                if (!response.ok) {
+                    throw new Error('Error al cargar el archivo JSON: ' + response.statusText);
+                }
+                // La segunda promesa para convertir la respuesta a formato JSON
+                return response.json();
+            })
+            .then(data => {
+                // Se resuelven las promesas y se accede a los datos del JSON
+                const accion = obtenerElementoAleatorio(data.accionesDeMovimiento);
+                const parte = obtenerElementoAleatorio(data.partesDelCuerpo);
+                const lado = obtenerElementoAleatorio(data.ladosDelCuerpo);
+
+                // Se construye la instruccion final
+                const instruccion = `${accion} el ${parte} ${lado}.`;
+
+                // Se escribe la instruccion en el elemento HTML con el ID "instruccion-movimiento El archivo json dice que:  "
+                document.getElementById('instruccion-movimiento').textContent = instruccion;
+            })
+            .catch(error => {
+                // Captura y maneja cualquier error que ocurra durante la carga
+                console.error('Hubo un problema con la operacion de fetch:', error);
+                document.getElementById('instruccion-movimiento').textContent = 'Error al cargar la instruccion.';
+            });
+    </script>
+</body>
+</html>
